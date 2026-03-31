@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: invoicehub-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: InvoiceHubDb
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: invoicehub-pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: rootpassword
+
+  api:
+    build: .
+    container_name: invoicehub-api
+    depends_on:
+      - db
+    ports:
+      - "5000:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=InvoiceHubDb;User=root;Password=rootpassword;
+
+volumes:
+  db_data:
