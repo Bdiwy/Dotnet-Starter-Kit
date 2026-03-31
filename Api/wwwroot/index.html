@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiceHub API | Active</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 500px;
+        }
+        .status-dot {
+            height: 12px;
+            width: 12px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #22c55e;
+        }
+        h1 { margin-bottom: 0.5rem; color: var(--primary); }
+        p { color: #64748b; line-height: 1.6; }
+        .badge {
+            background: #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .links { margin-top: 2rem; }
+        .links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="status-section">
+            <span class="status-dot"></span>
+            <span class="badge">API v1.0.0 - Operational</span>
+        </div>
+        <h1>InvoiceHub 🚀</h1>
+        <p>Welcome to the core engine of InvoiceHub. This service is built with .NET 9 and Clean Architecture, providing robust financial management APIs.</p>
+        
+        <div class="links">
+            <a href="/swagger">Swagger UI</a>
+            <a href="http://localhost:8081" target="_blank">phpMyAdmin</a>
+        </div>
+    </div>
+</body>
+</html>
