@@ -1,0 +1,30 @@
+# Create the Solution
+dotnet new sln -n InvoiceHub
+
+# Create the Projects (Class Libraries for Core, WebAPI for Entry)
+dotnet new classlib -n Domain
+dotnet new classlib -n Application
+dotnet new classlib -n Infrastructure
+dotnet new webapi -n Api
+
+# Add all to the Solution
+dotnet sln add Domain Application Infrastructure Api
+
+# Application only sees Domain
+dotnet add Application reference Domain
+
+# Infrastructure sees Application (and Domain via transit)
+dotnet add Infrastructure reference Application
+
+# Api sees Infrastructure (to wire everything up)
+dotnet add Api reference Infrastructure
+
+# MySQL Persistence (Infrastructure)
+dotnet add Infrastructure package Pomelo.EntityFrameworkCore.MySql
+
+# JWT Authentication (API)
+dotnet add Api package Microsoft.AspNetCore.Authentication.JwtBearer
+
+# Useful for Application Layer (Mediator & Mapping)
+dotnet add Application package MediatR
+dotnet add Application package FluentValidation.DependencyInjectionExtensions
