@@ -8,12 +8,15 @@ builder.Services.AddCors(options => {
         .AllowAnyMethod();
     });
 });
-app.UseCors("AllowReact");
+app.UseExceptionHandler("/error");
+app.UseHsts();
 app.UseHttpsRedirection();
-app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowReact");
+app.UseDefaultFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+// custom middlware here 
 app.Run();
