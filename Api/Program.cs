@@ -8,6 +8,10 @@ builder.Services.AddCors(options => {
         .AllowAnyMethod();
     });
 });
+
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+
 app.UseExceptionHandler("/error");
 app.UseHsts();
 app.UseHttpsRedirection();
