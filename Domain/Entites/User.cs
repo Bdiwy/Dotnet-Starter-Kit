@@ -9,8 +9,13 @@ namespace Domain.Entities
 
         [Required]
         public Guid TenantId { get; set; }
+        
+        /// <summary>
+        /// Indicates if the user is the owner of the tenant
+        /// </summary>
+        public bool IsOwner { get; set; } = false;
+        public Guid? TeamId { get; set; }
         public virtual Team? Team { get; set; }
-        public Guid? TeamId { get; set; } 
 
         [Required, StringLength(100)]
         public required string Username { get; set; }
