@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowReact", policy => {
@@ -9,9 +12,19 @@ builder.Services.AddCors(options => {
     });
 });
 
-if (app.Environment.IsDevelopment())
-    app.UseDeveloperExceptionPage();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        connectionString, 
+        ServerVersion.AutoDetect(connectionString),
+        b => b.MigrationsAssembly("Infrastructure") 
+));
 
+var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.MapScalarApiReference();
+}
 app.UseExceptionHandler("/error");
 app.UseHsts();
 app.UseHttpsRedirection();

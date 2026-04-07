@@ -28,3 +28,8 @@ dotnet add Api package Microsoft.AspNetCore.Authentication.JwtBearer
 # Useful for Application Layer (Mediator & Mapping)
 dotnet add Application package MediatR
 dotnet add Application package FluentValidation.DependencyInjectionExtensions
+
+
+run migration command
+dotnet ef migrations add YourMigrationName --project ../Infrastructure 
+dotnet ef database update --project ../Infrastructure
