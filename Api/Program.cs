@@ -9,6 +9,7 @@ using Application.Interfaces.Queries;
 using Infrastructure.Queries;
 using FluentValidation;
 using InvoiceHub.Application.Requests;
+using Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -52,6 +53,17 @@ builder.Services.AddScoped(typeof(ICommonQueries<>), typeof(CommonQueries<>));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var seeder = new DatabaseSeeder(context);
+    
+    // Run the migration and seeding
+    await context.Database.MigrateAsync(); 
+    await seeder.SeedAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

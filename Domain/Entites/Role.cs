@@ -13,7 +13,7 @@ namespace Domain.Entities
         public DateTime? UpdatedAt { get; set; }
 
 
-        public enum CFOUNDERS
+        public enum COFOUNDERS
         {
             OWNER,
             CEO,

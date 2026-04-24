@@ -10,7 +10,7 @@ using InvoiceHub.Application.Requests.DTOs;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services;
-public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<User> userRepo , ICommonCommands<User> userCommandsRepo) : IAuthService
+public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<User> userRepo , ICommonQueries<Role> roleRepo , ICommonCommands<User> userCommandsRepo) : IAuthService
 {
         public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
         {
@@ -29,6 +29,7 @@ public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<
             if(existingUser is not null)
                 return new AuthResponseDto (IsSuccess: false, Message: "Email already in use.");
             
+            var OwnerRole = await roleRepo.FetchFirstAsync(u => u.Name == Role.COFOUNDERS.OWNER.ToString());
             var newUser = new User
             {
                 Username = request.Username,
@@ -36,7 +37,7 @@ public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<
                 IsOwner = true,
                 PhoneNumber = request.PhoneNumber,
                 RoleId = Guid.NewGuid(),
-                Role = new Role { Name = Role.CFOUNDERS.OWNER.ToString() },
+                Role = OwnerRole is not null ? OwnerRole : new Role {Name = Role.COFOUNDERS.OWNER.ToString()} ,
             };
 
             newUser.Password = new PasswordHasher<User>().HashPassword(newUser, request.Password);
