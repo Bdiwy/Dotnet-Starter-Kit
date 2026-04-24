@@ -11,5 +11,13 @@ namespace Domain.Entities
         public virtual ICollection<RolePermission> RolePermissions { get; set; } = new HashSet<RolePermission>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+
+
+        public enum CFOUNDERS
+        {
+            OWNER,
+            CEO,
+            FOUNDER,
+        }
     }
 }

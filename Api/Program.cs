@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Application.Interfaces.Queries;
 using Infrastructure.Queries;
+using FluentValidation;
+using InvoiceHub.Application.Requests;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -48,6 +50,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped(typeof(ICommonQueries<>), typeof(CommonQueries<>));
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {

@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(User user, IEnumerable<string> permissions);
+        string GenerateToken(User user);
     }
 }

@@ -1,4 +1,5 @@
-using InvoiceHub.Application.DTOs;
+using InvoiceHub.Application.Requests.DTOs;
+using InvoiceHub.Application.Requests;
 namespace Application.Interfaces
 {
     public interface IAuthService

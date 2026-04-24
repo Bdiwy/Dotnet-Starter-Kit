@@ -16,9 +16,9 @@ namespace Infrastructure.Auth
         /// <param name="user"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string GenerateToken(User user, IEnumerable<string> permissions)
+        public string GenerateToken(User user)
         {
-            var claims = CreateClaims(user, permissions);
+            var claims = CreateClaims(user, user.Permissions);
             var signingCredentials = CreateSigningCredentials();
             var tokenDescriptor = CreateTokenDescriptor(claims, signingCredentials);
 

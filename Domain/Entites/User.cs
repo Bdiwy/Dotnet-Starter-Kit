@@ -5,6 +5,9 @@ namespace Domain.Entities
 {
     public class User : ITenantEntity
     {
+        public User()
+        {
+        }
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -22,7 +25,7 @@ namespace Domain.Entities
         public required string Username { get; set; }
 
         [Required]
-        public required string PasswordHash { get; set; }
+        public string Password { get; set; }
 
         [Required, EmailAddress, StringLength(256)]
         public required string Email { get; set; }
@@ -33,7 +36,8 @@ namespace Domain.Entities
         [Required]
         public Guid RoleId { get; set; }
         public virtual required Role Role { get; set; }
-
+        public IEnumerable<string> Permissions => 
+            Role?.RolePermissions?.Select(rp => rp.Permission.Name) ?? new List<string>();
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
 

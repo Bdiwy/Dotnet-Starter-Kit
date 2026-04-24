@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Application.Interfaces.Queries;
 using Domain.Interfaces;
@@ -12,6 +13,10 @@ namespace Infrastructure.Queries
     where T : class , ITenantEntity
     {
         private readonly DbSet<T> _dbSet = context.Set<T>();
+        public async Task<T?> FetchFirstAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
 
         public async Task<T?> GetEntityByIdAsync(Guid id)
         {
@@ -23,19 +28,12 @@ namespace Infrastructure.Queries
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<List<T>> GetEntitiesByTenantIdAsync(Guid tenantId)
+        public async Task<List<T>> GetEntitiesDataWithConditionAsync(Func<T, bool> condition)
         {
-            return await _dbSet.Where(e => e.TenantId == tenantId).ToListAsync();
-        }
-
-
-        public async Task<List<T>> GetEntitiesByTenantIdWithConditionAsync(Guid tenantId, Func<T, bool> condition)
-        {
-            return await Task.FromResult(
-                _dbSet.Where(e => e.TenantId == tenantId)
-                      .AsEnumerable()
-                      .Where(condition)
-                      .ToList());
+            return await Task.FromResult(_dbSet
+                            .AsEnumerable()
+                            .Where(condition)
+                            .ToList());
         }
     }
 }
