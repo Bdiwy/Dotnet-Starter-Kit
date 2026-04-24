@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Domain.Interfaces;
 namespace Domain.Entities
 {
 
-    public class Team
+    public class Team : ITenantEntity
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
