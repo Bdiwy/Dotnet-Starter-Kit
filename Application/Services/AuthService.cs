@@ -38,6 +38,7 @@ public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<
                 PhoneNumber = request.PhoneNumber,
                 RoleId = Guid.NewGuid(),
                 Role = OwnerRole is not null ? OwnerRole : new Role {Name = Role.COFOUNDERS.OWNER.ToString()} ,
+                Password=""
             };
 
             newUser.Password = new PasswordHasher<User>().HashPassword(newUser, request.Password);

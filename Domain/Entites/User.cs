@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using Domain.Interfaces;
 
 namespace Domain.Entities
 {
     public class User : ITenantEntity
     {
-        public User()
-        {
-        }
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -25,7 +23,7 @@ namespace Domain.Entities
         public required string Username { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         [Required, EmailAddress, StringLength(256)]
         public required string Email { get; set; }
