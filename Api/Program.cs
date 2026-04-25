@@ -4,6 +4,7 @@ using Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Application.Interfaces.Queries;
 using Infrastructure.Queries;
@@ -56,6 +57,17 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "InvoiceHub API",
+        Version = "v1",
+        Description = "InvoiceHub HTTP API"
+    });
+});
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -71,17 +83,35 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.MapScalarApiReference();
 }
+
 app.UseExceptionHandler("/error");
 app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowReact");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "InvoiceHub API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
 app.UseDefaultFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
 // custom middlware here 
 app.Run();
