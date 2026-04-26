@@ -1,7 +1,9 @@
 using System.Text;
 using Application.Interfaces;
+using Application.Services;
 using Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -9,6 +11,7 @@ using Scalar.AspNetCore;
 using Application.Interfaces.Queries;
 using Infrastructure.Queries;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using InvoiceHub.Application.Requests;
 using Infrastructure.Seed;
 using Infrastructure.Interfaces;
@@ -49,12 +52,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
         };
     });
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssemblyContaining<LoginRequestValidator>());
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped(typeof(ICommonQueries<>), typeof(CommonQueries<>));
+builder.Services.AddScoped(typeof(ICommonCommands<>), typeof(CommonCommands<>));
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -106,6 +113,15 @@ app.UseDefaultFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.Map("/error", (HttpContext httpContext) =>
+{
+    var exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+    return Results.Problem(
+        title: "Server error",
+        detail: app.Environment.IsDevelopment() ? exception?.ToString() : exception?.Message,
+        statusCode: StatusCodes.Status500InternalServerError);
+});
 
 if (app.Environment.IsDevelopment())
 {

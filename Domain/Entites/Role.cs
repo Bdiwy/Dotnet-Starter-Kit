@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Domain.Interfaces;
 namespace Domain.Entities
 {
 
-    public class Role {
+    public class Role : ITenantEntity
+    {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
+        [Required]
+        public Guid TenantId { get; set; }
         [Required, StringLength(100)]
         public required string Name { get; set; }
         public virtual ICollection<User> Users { get; set; } = new HashSet<User>();

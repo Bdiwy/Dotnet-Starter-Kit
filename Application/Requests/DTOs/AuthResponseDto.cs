@@ -14,6 +14,7 @@ public record AuthResponseDto(
 // Factory method for success
 public static AuthResponseDto SuccessLogin(string token, User user) => new(
     IsSuccess: true,
+    Message: "Login successful.",
     Token: token,
     Username: user.Username,
     Email: user.Email,
@@ -29,9 +30,9 @@ public static AuthResponseDto Failure(string message) => new(
 
 
 // register method for success 
-public static AuthResponseDto SuccessRegister(string message ="Registration successful.") => new(
+public static AuthResponseDto SuccessRegister() => new(
     IsSuccess: true,
-    Message: message
+    Message: "Registration successful."
 );
 
 }

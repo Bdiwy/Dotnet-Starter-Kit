@@ -10,5 +10,8 @@ namespace Application.Interfaces.Queries
     {
         Task SaveMeAsync(T entity);
         Task SaveAllAsync(IEnumerable<T> entity);
+        Task UpdateAsync(T entity, Guid id);
+        Task DeleteAllAsync(IEnumerable<T> entities);
+        Task DeleteAsync(T entity);
     }
 }

@@ -57,6 +57,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -125,7 +128,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsOwner")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
 

@@ -25,5 +25,26 @@ namespace Infrastructure.Queries
             await  _dbSet.AddRangeAsync(entities);
             await context.SaveChangesAsync();            
         }
+
+        public async Task UpdateAsync(T entity, Guid id)
+        {
+            var existingEntity = await _dbSet.FindAsync(id);
+            if (existingEntity is null)
+                throw new Exception("Entity not found");
+            _dbSet.Update(entity);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(T entity)
+        {
+            _dbSet.Remove(entity);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAllAsync(IEnumerable<T> entities)
+        {
+            _dbSet.RemoveRange(entities);
+            await context.SaveChangesAsync();
+        }
     }
 }

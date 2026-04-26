@@ -10,7 +10,7 @@ using InvoiceHub.Application.Requests.DTOs;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services;
-public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<User> userRepo , ICommonQueries<Role> roleRepo , ICommonCommands<User> userCommandsRepo) : IAuthService
+public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<User> userRepo , ICommonQueries<Role> roleRepo , ICommonCommands<User> userCommandsRepo , ICommonCommands<Role> roleCommandsRepo) : IAuthService
 {
         public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
         {
@@ -18,6 +18,12 @@ public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<
             
             if(user is null || !user.VerifyPassword(request.Password))
                 return AuthResponseDto.Failure("Invalid email or password.");
+
+            // CommonQueries does not include navigation properties, so load Role explicitly.
+            var role = await roleRepo.FetchFirstAsync(r => r.Id == user.RoleId);
+            if (role is null)
+                return AuthResponseDto.Failure("User role is not configured.");
+            user.Role = role;
             
             return AuthResponseDto.SuccessLogin(IJwtTokenGenerator.GenerateToken(user!), user!);
         }
@@ -29,15 +35,23 @@ public class AuthService(IJwtTokenGenerator IJwtTokenGenerator , ICommonQueries<
             if(existingUser is not null)
                 return new AuthResponseDto (IsSuccess: false, Message: "Email already in use.");
             
-            var OwnerRole = await roleRepo.FetchFirstAsync(u => u.Name == Role.COFOUNDERS.OWNER.ToString());
+            var newTenantId = Guid.NewGuid();
+            var ownerRole = new Role
+            {
+                Name = Role.COFOUNDERS.OWNER.ToString(),
+                TenantId = newTenantId
+            };
+            await roleCommandsRepo.SaveMeAsync(ownerRole);
+
             var newUser = new User
             {
                 Username = request.Username,
                 Email = request.Email,
                 IsOwner = true,
+                TenantId = newTenantId,
                 PhoneNumber = request.PhoneNumber,
-                RoleId = Guid.NewGuid(),
-                Role = OwnerRole is not null ? OwnerRole : new Role {Name = Role.COFOUNDERS.OWNER.ToString()} ,
+                RoleId = ownerRole.Id,
+                Role = ownerRole,
                 Password=""
             };
 

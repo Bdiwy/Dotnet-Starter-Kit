@@ -49,6 +49,6 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<TEntity>()
             .HasQueryFilter(entity =>
-                !CurrentTenantId.HasValue || entity.TenantId == CurrentTenantId.Value);
+                CurrentTenantId == null || entity.TenantId == CurrentTenantId);
     }
 }

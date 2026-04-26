@@ -6,18 +6,22 @@ public class DatabaseSeeder(ApplicationDbContext context)
 {
     public async Task SeedAsync()
     {
-        await SeedOwnerRole();
+
+        // no needs for this seeding for now
+        // await SeedOwnerRole();
     }
 
     private async Task SeedOwnerRole()
     {
         // Check if the Owner role already exists
-        string ownerRoleName = Role.COFOUNDERS.OWNER.ToString(); 
-        if (!await context.Roles.AnyAsync(r => r.Name == ownerRoleName))
+        string ownerRoleName = Role.COFOUNDERS.OWNER.ToString();
+        var systemTenantId = Guid.Empty;
+        if (!await context.Roles.AnyAsync(r => r.Name == ownerRoleName && r.TenantId == systemTenantId))
         {
             var ownerRole = new Role 
             { 
-                Name = ownerRoleName 
+                Name = ownerRoleName,
+                TenantId = systemTenantId
             };
             context.Roles.Add(ownerRole);
             await context.SaveChangesAsync();
