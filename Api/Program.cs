@@ -16,6 +16,7 @@ using InvoiceHub.Application.Requests;
 using Infrastructure.Seed;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
+using InvoiceHub.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -111,6 +112,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseDefaultFiles();
 app.UseAuthentication();
+app.UseMiddleware<TokenValidationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
