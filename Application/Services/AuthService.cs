@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.Interfaces.Queries;
 using Domain.Entities;
-using FluentValidation.Validators;
 using InvoiceHub.Application.Requests;
 using InvoiceHub.Application.Requests.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Services;
 public class AuthService(
     IJwtTokenGenerator jwtTokenGenerator,
+    IUserAuthQueries userAuthQueries,
     ICommonQueries<User> userRepo,
     ICommonQueries<AccessAndRefreshToken> tokenQueries,
     ICommonCommands<AccessAndRefreshToken> tokenRepo,
@@ -88,7 +87,7 @@ public class AuthService(
         if (storedToken is null || storedToken.IsRevoked || storedToken.IsExpired)
             return AuthResponseDto.Failure("Invalid or expired refresh token.");
 
-        var user = await userRepo.FetchFirstAsync(u => u.Id == storedToken.UserId, ct);
+        var user = await userAuthQueries.GetByIdWithRoleAsync(storedToken.UserId, ct);
         if (user is null)
             return AuthResponseDto.Failure("User not found.");
 
@@ -116,7 +115,7 @@ public class AuthService(
 
     private async Task<User?> GetAndValidateUserCredentialsAsync(LoginRequestDto request, CancellationToken ct)
     {
-        var user = await userRepo.FetchFirstAsync(u => u.Email == request.Email, ct);
+        var user = await userAuthQueries.GetByEmailWithRoleAsync(request.Email, ct);
         if (user is null)
             return null;
 

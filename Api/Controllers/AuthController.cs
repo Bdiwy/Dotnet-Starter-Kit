@@ -50,7 +50,7 @@ public class AuthController(IMediator mediator)  : ControllerBase
             ? Request.Headers["X-Device-Type"].ToString()
             : nameof(DeviceType.WEB);
 
-        var userIdClaim = User.FindFirstValue("sub");
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(userIdClaim, out var userId))
             return Unauthorized(AuthResponseDto.Failure("Invalid token subject."));
 

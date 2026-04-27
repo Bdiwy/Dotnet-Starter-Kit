@@ -1,8 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using Domain.Entities;
 using InvoiceHub.Application.Requests.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-
+using System.Security.Claims;
 namespace InvoiceHub.Api.Middlewares;
 
 public class TokenValidationMiddleware(RequestDelegate next)
@@ -28,7 +29,7 @@ public class TokenValidationMiddleware(RequestDelegate next)
             return;
         }
 
-        var userIdClaim = context.User.FindFirst("sub")?.Value;
+        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userIdClaim, out var userId))
         {
             await WriteUnauthorizedAsync(context, "Invalid token subject.");

@@ -58,6 +58,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped(typeof(ICommonQueries<>), typeof(CommonQueries<>));
+builder.Services.AddScoped<IUserAuthQueries, UserAuthQueries>();
 builder.Services.AddScoped(typeof(ICommonCommands<>), typeof(CommonCommands<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpContextAccessor();
