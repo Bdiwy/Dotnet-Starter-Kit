@@ -4,13 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Seed;
 public class DatabaseSeeder(ApplicationDbContext context)
 {
-    public async Task SeedAsync()
-    {
-
-        // no needs for this seeding for now
-        // await SeedOwnerRole();
-    }
-
+    public Task SeedAsync() => Task.CompletedTask;
     private async Task SeedOwnerRole()
     {
         // Check if the Owner role already exists
