@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateUsersTeamsRolesPermissionsClientsInvoices : Migration
+    public partial class InitialCreateUsersTeamsRolesPermissionsClientsInvoicesAndTokenTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -52,7 +52,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TenantId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -98,18 +98,15 @@ namespace Infrastructure.Migrations
                     TenantId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     IsOwner = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     TeamId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    Username = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Username = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: false)
+                    Password = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                    Email = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumber = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    PhoneNumber = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RoleId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    RefreshToken = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -132,21 +129,50 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "access_and_refresh_tokens",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Token = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshToken = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    DeviceType = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsRevoked = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TokenExpiresAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    RefreshTokenExpiresAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_access_and_refresh_tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_access_and_refresh_tokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    CompanyName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    CompanyName = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ContactName = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactEmail = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ContactEmail = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactPhone = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ContactPhone = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactAddress = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    ContactAddress = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TradeLicenseNumber = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    TradeLicenseNumber = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TenantId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     AddedById = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -170,9 +196,9 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Title = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Title = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "varchar(600)", maxLength: 600, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TotalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     TaxAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
@@ -209,14 +235,43 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_access_and_refresh_tokens_RefreshToken",
+                table: "access_and_refresh_tokens",
+                column: "RefreshToken",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_access_and_refresh_tokens_UserId_DeviceType_TenantId",
+                table: "access_and_refresh_tokens",
+                columns: new[] { "UserId", "DeviceType", "TenantId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Clients_AddedById",
                 table: "Clients",
                 column: "AddedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clients_ContactEmail",
+                table: "Clients",
+                column: "ContactEmail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_ContactPhone",
+                table: "Clients",
+                column: "ContactPhone",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Clients_Tenant_AddedBy",
                 table: "Clients",
                 columns: new[] { "TenantId", "AddedById" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_TradeLicenseNumber",
+                table: "Clients",
+                column: "TradeLicenseNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_AddedById",
@@ -276,6 +331,12 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_PhoneNumber",
+                table: "Users",
+                column: "PhoneNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
@@ -295,6 +356,9 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "access_and_refresh_tokens");
+
             migrationBuilder.DropTable(
                 name: "Invoices");
 
