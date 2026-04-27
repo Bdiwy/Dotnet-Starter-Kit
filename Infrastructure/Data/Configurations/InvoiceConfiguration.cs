@@ -16,5 +16,22 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .WithMany(c => c.Invoices)
             .HasForeignKey(i => i.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(i => i.Status)
+            .HasConversion<string>()
+            .HasMaxLength(30);
+
+        builder.Property(i => i.PaymentMethod)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        builder.HasIndex(i => new { i.TenantId, i.AddedById })
+            .HasDatabaseName("IX_Invoices_Tenant_AddedBy");
+        
+        builder.HasIndex(i => new { i.TenantId, i.PaymentMethod })
+            .HasDatabaseName("IX_Invoices_Tenant_PaymentMethod");
+
+        builder.HasIndex(i => new { i.TenantId, i.Status })
+            .HasDatabaseName("IX_Invoices_Tenant_Status");
     }
 }

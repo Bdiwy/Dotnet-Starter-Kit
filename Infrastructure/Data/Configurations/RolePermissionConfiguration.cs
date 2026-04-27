@@ -15,5 +15,8 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
         builder.HasOne(rp => rp.Permission)
             .WithMany(p => p.RolePermissions)
             .HasForeignKey(rp => rp.PermissionId);
+
+        builder.HasIndex(i => new { i.TenantId, i.RoleId , i.PermissionId })
+            .HasDatabaseName("IX_RolePermissions_Tenant_RoleId_PermissionId");
     }
 }

@@ -73,6 +73,9 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AddedById");
 
+                    b.HasIndex("TenantId", "AddedById")
+                        .HasDatabaseName("IX_Clients_Tenant_AddedBy");
+
                     b.ToTable("Clients", (string)null);
                 });
 
@@ -107,11 +110,15 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("PaidAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<decimal>("TaxAmount")
                         .HasColumnType("decimal(65,30)");
@@ -136,6 +143,15 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("TenantId", "AddedById")
+                        .HasDatabaseName("IX_Invoices_Tenant_AddedBy");
+
+                    b.HasIndex("TenantId", "PaymentMethod")
+                        .HasDatabaseName("IX_Invoices_Tenant_PaymentMethod");
+
+                    b.HasIndex("TenantId", "Status")
+                        .HasDatabaseName("IX_Invoices_Tenant_Status");
+
                     b.ToTable("Invoices", (string)null);
                 });
 
@@ -158,7 +174,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions");
+                    b.HasIndex("Name");
+
+                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -194,9 +212,15 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("PermissionId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("RoleId", "PermissionId");
 
                     b.HasIndex("PermissionId");
+
+                    b.HasIndex("TenantId", "RoleId", "PermissionId")
+                        .HasDatabaseName("IX_RolePermissions_Tenant_RoleId_PermissionId");
 
                     b.ToTable("RolePermissions");
                 });
@@ -225,6 +249,9 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("Name", "TenantId")
                         .IsUnique();
+
+                    b.HasIndex("TenantId", "Name")
+                        .HasDatabaseName("IX_Team_Tenant_Name");
 
                     b.ToTable("Teams");
                 });

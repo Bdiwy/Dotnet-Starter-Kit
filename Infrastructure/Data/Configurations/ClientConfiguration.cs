@@ -18,5 +18,8 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
             .WithOne(i => i.Client)
             .HasForeignKey(i => i.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(i => new { i.TenantId, i.AddedById })
+            .HasDatabaseName("IX_Clients_Tenant_AddedBy");        
     }
 }

@@ -20,6 +20,9 @@ namespace Infrastructure.Data.Configurations
                     .WithOne(u => u.Team)
                     .HasForeignKey(u => u.TeamId)
                     .OnDelete(DeleteBehavior.SetNull); 
-        }
+
+            builder.HasIndex(i => new { i.TenantId, i.Name })
+                .HasDatabaseName("IX_Team_Tenant_Name");
+            }
     }
 }
