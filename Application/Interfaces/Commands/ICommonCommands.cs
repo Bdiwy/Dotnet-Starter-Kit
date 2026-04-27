@@ -8,10 +8,11 @@ namespace Application.Interfaces.Queries
 {
     public interface ICommonCommands<T> where T : class
     {
-        Task SaveMeAsync(T entity);
+        Task SaveMeAsync(T entity , CancellationToken cancellationToken = default);
         Task SaveAllAsync(IEnumerable<T> entity);
         Task UpdateAsync(T entity, Guid id);
         Task DeleteAllAsync(IEnumerable<T> entities);
+        Task DeleteThisAsync(Expression<Func<T, bool>> predicate , CancellationToken ct);
         Task DeleteAsync(T entity);
     }
 }

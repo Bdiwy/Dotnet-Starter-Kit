@@ -8,7 +8,7 @@ namespace Application.Interfaces.Queries
 {
     public interface ICommonQueries<T> where T : class
     {
-        public Task<T?> FetchFirstAsync(Expression<Func<T, bool>> predicate);
+        public Task<T?> FetchFirstAsync(Expression<Func<T, bool>> predicate , CancellationToken cancellationToken = default);
         public Task<List<T>> GetAllEntitiesAsync();
         public Task<List<T>> GetEntitiesDataWithConditionAsync(Func<T, bool> condition);
     }

@@ -14,9 +14,9 @@ namespace Infrastructure.Queries
     {
         private readonly DbSet<T> _dbSet = context.Set<T>();
 
-        public async Task SaveMeAsync(T entity)
+        public async Task SaveMeAsync(T entity , CancellationToken ct)
         {
-            await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity , ct);
             await context.SaveChangesAsync();            
         }
 
@@ -28,9 +28,6 @@ namespace Infrastructure.Queries
 
         public async Task UpdateAsync(T entity, Guid id)
         {
-            var existingEntity = await _dbSet.FindAsync(id);
-            if (existingEntity is null)
-                throw new Exception("Entity not found");
             _dbSet.Update(entity);
             await context.SaveChangesAsync();
         }
@@ -45,6 +42,11 @@ namespace Infrastructure.Queries
         {
             _dbSet.RemoveRange(entities);
             await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteThisAsync(Expression<Func<T, bool>> predicate , CancellationToken ct)
+        {
+            await _dbSet.Where(predicate).ExecuteDeleteAsync(ct);
         }
     }
 }

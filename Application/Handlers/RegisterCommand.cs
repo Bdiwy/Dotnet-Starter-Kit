@@ -9,7 +9,7 @@ public class RegisterHandler(IAuthService authService)
 {
     public async Task<AuthResponseDto> Handle(RegisterCommand request , CancellationToken ct)
     {
-        var result = await authService.RegisterAsync(request.RequestDto);
+        var result = await authService.RegisterAsync(request.RequestDto , ct);
         return result;
     }
 } 
