@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Queries
 {
     public class CommonQueries<T>(ApplicationDbContext context) : ICommonQueries<T>
-    where T : class , ITenantEntity
+    where T : class
     {
         private readonly DbSet<T> _dbSet = context.Set<T>();
-        public async Task<T?> FetchFirstAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> FetchFirstAsync(Expression<Func<T, bool>> predicate , CancellationToken ct)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            return await _dbSet.FirstOrDefaultAsync(predicate,ct);
         }
 
         public async Task<T?> GetEntityByIdAsync(Guid id)

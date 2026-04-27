@@ -9,6 +9,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
         builder.ToTable("Permissions");
 
         builder.HasKey(c => c.Id);
+        builder.Property(u => u.Name).HasMaxLength(300);
 
         builder.HasIndex(i => i.Name);
     }

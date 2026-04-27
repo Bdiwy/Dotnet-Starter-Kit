@@ -25,6 +25,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .HasConversion<string>()
             .HasMaxLength(20);
 
+        builder.Property(i=> i.Title).HasMaxLength(300);
+        builder.Property(i=> i.Description).HasMaxLength(600);
+
         builder.HasIndex(i => new { i.TenantId, i.AddedById })
             .HasDatabaseName("IX_Invoices_Tenant_AddedBy");
         

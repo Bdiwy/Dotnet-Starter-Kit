@@ -18,6 +18,18 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
             .WithOne(i => i.Client)
             .HasForeignKey(i => i.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+
+        builder.Property(i=> i.CompanyName).HasMaxLength(300);
+        builder.Property(i=> i.ContactEmail).HasMaxLength(300);
+        builder.Property(i=> i.ContactName).HasMaxLength(300);
+        builder.Property(i=> i.ContactPhone).HasMaxLength(300);
+        builder.Property(i=> i.ContactAddress).HasMaxLength(300);
+        builder.Property(i=> i.TradeLicenseNumber).HasMaxLength(300);
+
+        builder.HasIndex(i=> i.ContactEmail).IsUnique();
+        builder.HasIndex(i=> i.TradeLicenseNumber).IsUnique();
+        builder.HasIndex(i=> i.ContactPhone).IsUnique();
 
         builder.HasIndex(i => new { i.TenantId, i.AddedById })
             .HasDatabaseName("IX_Clients_Tenant_AddedBy");        
