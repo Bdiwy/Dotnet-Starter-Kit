@@ -33,4 +33,21 @@ public class ClientController(IMediator mediator)  : ControllerBase
     //     var result = await mediator.Send(new GetAllClientsQuery(tenantId), ct);
     //     return Ok(result); 
     // }
+
+    [Authorize]
+    [HttpGet("authorize-test")]
+    public async Task<ActionResult> GetAll(CancellationToken ct)
+    {
+        return Ok(); 
+    }
+
+    [HttpGet("non-authorize-test")]
+    public async Task<ActionResult>Test(CancellationToken ct)
+    {
+        return Ok(); 
+
+    }
+
+    
+    
 }
