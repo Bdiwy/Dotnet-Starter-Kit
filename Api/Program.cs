@@ -1,21 +1,16 @@
 using System.Text;
-using Application.Interfaces;
-using Application.Services;
-using Infrastructure.Auth;
+using Application;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
-using Application.Interfaces.Queries;
-using Infrastructure.Queries;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using InvoiceHub.Application.Requests;
 using Infrastructure.Seed;
-using Infrastructure.Interfaces;
-using Infrastructure.Services;
 using InvoiceHub.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,15 +51,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<LoginRequestValidator>());
 builder.Services.AddAuthorization();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped(typeof(ICommonQueries<>), typeof(CommonQueries<>));
-builder.Services.AddScoped<IUserAuthQueries, UserAuthQueries>();
-builder.Services.AddScoped(typeof(ICommonCommands<>), typeof(CommonCommands<>));
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
