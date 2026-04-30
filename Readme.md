@@ -1,6 +1,6 @@
- # InvoiceHub 🚀
+ # StarterKit 🚀
 
-A professional, scalable invoicing system built with **.NET 9**, **MySQL**, and **Clean Architecture**.
+A professional, scalable start kit built with **.NET 9**, **MySQL**, and **Clean Architecture**.
 
 ---
 
@@ -12,18 +12,18 @@ This project follows **Clean Architecture** (Onion Architecture) to ensure the c
 
 1. **Domain** (Core Layer)
    - **Role:** The heart of the application. Contains enterprise-wide logic and types.
-   - **Contents:** Entities (`Invoice`, `Client`), Value Objects, Enums, and Repository Interfaces.
+   - **Contents:** Entities , Value Objects, Enums, and Repository Interfaces.
    - **Dependencies:** None.
 
 2. **Application** (Orchestration Layer)
    - **Role:** Contains application-specific business rules. It coordinates the data flow to and from the domain.
    - **Contents:** MediatR Commands/Queries, DTOs, FluentValidation, and Mapping logic.
-   - **Logic Note:** This is where "Services" live as **Handlers**. It handles workflows like "When an invoice is created, decrease stock and send an email."
+   - **Logic Note:** This is where "Services" live as **Handlers**. It handles workflows like "When an Example is created, decrease stock and send an email."
    - **Dependencies:** Depends only on `Domain`.
 
 3. **Infrastructure** (External Concerns)
    - **Role:** Implements interfaces defined in the core layers. Deals with the "How" of data persistence.
-   - **Contents:** `InvoiceDbContext` (EF Core), MySQL Migrations, Repository Implementations, and Identity (JWT) logic.
+   - **Contents:** `ExampleDbContext` (EF Core), MySQL Migrations, Repository Implementations, and Identity (JWT) logic.
    - **Dependencies:** Depends on `Application`.
 
 4. **Api** (Presentation Layer)
@@ -36,7 +36,7 @@ This project follows **Clean Architecture** (Onion Architecture) to ensure the c
 ## 💡 Where Does the Logic Go?
 
 - **Domain Logic:** If it's a rule that never changes (e.g., *Total = Price × Quantity*), it goes inside the **Domain Entity**.
-- **Application Logic:** If it's a workflow involving multiple steps or external systems (e.g., *Check User → Create Invoice → Save to DB → Log Activity*), it goes into the **Application Handlers**.
+- **Application Logic:** If it's a workflow involving multiple steps or external systems (e.g., *Check User → Create Example → Save to DB → Log Activity*), it goes into the **Application Handlers**.
 
 ---
 
