@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Infrastructure.Auth
 {
-    public class JwtTokenGenerator(IConfiguration _config) : IJwtTokenGenerator
+    public class JwtTokenGenerator(IConfiguration _config) : IScopedService , IJwtTokenGenerator
     {
         /// <summary>
         /// Generates a JWT token for the given user and their permissions

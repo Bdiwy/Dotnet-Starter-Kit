@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.Interfaces.Queries;
 using Domain.Entities;
+using Domain.Interfaces;
 using InvoiceHub.Application.Requests;
 using InvoiceHub.Application.Requests.DTOs;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +16,7 @@ public class AuthService(
     ICommonCommands<AccessAndRefreshToken> tokenRepo,
     ICommonCommands<User> userCommandsRepo,
     ICommonCommands<Role> roleCommandsRepo,
-    IConfiguration _config) : IAuthService
+    IConfiguration _config) : IScopedService , IAuthService
 {
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request, string? apiKey, string deviceType, CancellationToken ct)
     {

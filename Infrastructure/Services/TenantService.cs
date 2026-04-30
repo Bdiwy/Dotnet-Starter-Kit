@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Domain.Interfaces;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Services
 {
-public class TenantService(IHttpContextAccessor httpContextAccessor) : ITenantService
+public class TenantService(IHttpContextAccessor httpContextAccessor) : ISingletonService , ITenantService
     {
         public Guid? GetTenantId()
         {

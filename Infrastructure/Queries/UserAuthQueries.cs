@@ -1,10 +1,11 @@
 using Application.Interfaces.Queries;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Queries;
 
-public class UserAuthQueries(ApplicationDbContext context) : IUserAuthQueries
+public class UserAuthQueries(ApplicationDbContext context) : IScopedService , IUserAuthQueries
 {
     private IQueryable<User> UsersWithAuthGraph()
         => context.Users
